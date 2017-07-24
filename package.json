@@ -1,0 +1,24 @@
+{
+  "name": "phantom-p",
+  "version": "1.0.0",
+  "description": "PhantomP Node.js BE",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shawnluxy/PhantomP.git"
+  },
+  "author": "Shawn Lu",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/shawnluxy/PhantomP/issues"
+  },
+  "homepage": "https://github.com/shawnluxy/PhantomP#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
+    "express": "^4.15.3"
+  }
+}
