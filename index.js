@@ -1,18 +1,27 @@
-var express = require('express');
-var cors = require('cors');
-var bodyparser = require('body-parser');
-var app = express();
-var router = express.Router();
-var port = 233;
+const express = require('express');
+const bodyparser = require('body-parser');
+const cors = require('cors');
+var logger = require('./env/logger');
+var db = require('./env/db');
 
-// app.use(express.static(__dirname+'/'));
+var app = express();
+var port = 2333;
+
 app.use(cors());
 app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({extended: true}));
+app.use(logger.logging());
 
-app.listen(port, function(){
-	console.log('PhantomP server listening ...');
-});
+db.setup().once('open', listen);
+
+function listen () {
+    app.listen(port, function () {
+        console.log('PhantomP server listening ...');
+    });
+}
 
 app.get('/', function(req,res){
 	res.send('Phantom Portrait');
 });
+
+app.use('/user', require('./app/controller/user'));
