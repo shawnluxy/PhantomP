@@ -9,7 +9,7 @@ var userSchema = new schema({
     ip_address: [String],
     nickname: {type: String, default: ''},
     portrait: ObjectId,
-    photo: [ObjectId]
+    photo: [String]
 });
 
 // validation
@@ -17,9 +17,8 @@ userSchema.path('username').validate(function (email) {
     return email.length;
 }, 'Empty username');
 userSchema.path('username').validate(function (email, fn) {
-    var User = mongo.model('User', userSchema, 'user');
     User.find({username: email}, function (err, list) {
-        if(err) return console.error(err);
+        if(err) return console.error('{username/validate} '+err);
         if(list.length>0) fn(false);
         else fn(true);
     });
@@ -36,16 +35,24 @@ userSchema.methods = {
     checkPwd: function (pwd) {
         return pwd === this.password;
     },
-    addIP: function (ip) {
-        if(this.ip_address.indexOf(ip)<0){
-            this.ip_address.push(ip);
-            return true;
+    addIP: function (ip, uid) {
+        var ips = this.ip_address;
+        if(ips.indexOf(ip)<0){
+            ips.push(ip);
+            User.update({_id: uid}, {ip_address: ips}, function (err) {
+                if(err) return console.error('{user/addIP} '+err);
+                else return true;
+            });
         }
     },
-    addPhoto: function (id) {
-        if(this.photo.indexOf(id)<0){
-            this.photo.push(id);
-            return true;
+    addPhoto: function (pid, uid) {
+        var p = this.photo;
+        if(p.indexOf(pid)<0){
+            p.push(pid);
+            User.update({_id: uid}, {photo: p}, function (err) {
+                if(err) return console.error('{user/addPhoto} '+err);
+                else return true;
+            });
         }
     }
 };

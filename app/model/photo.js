@@ -14,7 +14,7 @@ photoSchema.methods = {
 
 };
 
-var Photo = mongo.model('Photo', photoSchema);
+var Photo = mongo.model('Photo', photoSchema, 'photo');
 exports.getPhotoModel = function () {
     return Photo;
 };
