@@ -27,3 +27,4 @@ app.get('/', function(req,res){
 });
 
 app.use('/user', require('./app/controller/user'));
+app.use('/photo', require('./app/controller/photo'));
