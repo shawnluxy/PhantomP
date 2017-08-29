@@ -15,9 +15,7 @@ router.get('/find/:id', function (req, res) {
     User.findOne({_id: id}, fields, function (err, user) {
         if(err){
             res.send('FAIL:'+err);
-            return console.error('{user/find} '+err);
-        }
-        if(user===null){
+        } else if(user===null){
             res.send('EMPTY');
         } else{
             res.send(user);
@@ -30,7 +28,6 @@ router.post('/create', function (req, res) {
     user.save(function (err, u) {
         if(err){
             res.send('FAIL:'+err);
-            return console.error('{user/create} '+err);
         } else {
             res.send(u._id);
         }
@@ -44,9 +41,7 @@ router.post('/login', function (req, res) {
     User.findOne({username: name}, function (err, user) {
         if(err){
             res.send('FAIL:'+err);
-            return console.error('{user/login} '+err);
-        }
-        if(user === null){
+        } else if(user === null){
             res.send('USER NOT EXISTS');
         } else if(!user.checkPwd(pwd)){
             res.send('PASSWORD INCORRECT');
@@ -65,9 +60,7 @@ router.put('/update/:id', function (req, res) {
     User.findOneAndUpdate({_id: id}, updates, {new: true}, function (err, user) {
         if(err){
             res.send('FAIL:'+err);
-            return console.error('{user/update} '+err);
-        }
-        if(user===null){
+        } else if(user===null){
             res.send('EMPTY');
         } else{
             res.send(user);
@@ -75,17 +68,15 @@ router.put('/update/:id', function (req, res) {
     });
 });
 
-router.delete('delete', function (req, res) {
+router.delete('/delete', function (req, res) {
     var id = req.body.id;
     User.findOneAndRemove({_id: id}, function (err, user) {
         if(err){
             res.send('FAIL:'+err);
-            return console.error('{user/delete} '+err);
-        }
-        if(user===null){
+        } else if(user===null){
             res.send('EMPTY');
         } else{
-            res.send('DELETED' + user._id);
+            res.send('DELETED: ' + user._id);
         }
     });
 });
