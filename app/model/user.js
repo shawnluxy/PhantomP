@@ -40,8 +40,7 @@ userSchema.methods = {
         if(ips.indexOf(ip)<0){
             ips.push(ip);
             User.update({_id: uid}, {ip_address: ips}, function (err) {
-                if(err) return console.error('{user/addIP} '+err);
-                else return true;
+                return err;
             });
         }
     },
@@ -50,8 +49,16 @@ userSchema.methods = {
         if(p.indexOf(pid)<0){
             p.push(pid);
             User.update({_id: uid}, {photo: p}, function (err) {
-                if(err) return console.error('{user/addPhoto} '+err);
-                else return true;
+                return err;
+            });
+        }
+    },
+    removePhoto: function (pid, uid) {
+        var p = this.photo;
+        if(p.indexOf(pid)>-1){
+            p.splice(p.indexOf(pid), 1);
+            User.update({_id: uid}, {photo: p}, function (err) {
+                return err;
             });
         }
     }
