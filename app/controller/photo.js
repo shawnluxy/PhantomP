@@ -40,7 +40,17 @@ router.post('/upload/:uid', function (req, res) {
                     cb(null, file.originalname + '-' + time)
                 }
             });
-            var upload = multer({ storage: storage, limits: { fileSize: 1000000 } }).array('photo', 9);
+            var upload = multer({
+                storage: storage,
+                limits: { fileSize: 1000000 },
+                fileFilter: function (req, file, cb) {
+                    var ext = file.mimetype.split('/')[0];
+                    if(ext!=='image'){
+                        return cb(new Error('Not Image'), false);
+                    }
+                    cb(null, true);
+                }
+            }).array('photo', 9);
             upload(req, res, function (err) {
                 if(err){
                     return res.send('FAIL:'+err);
