@@ -5,7 +5,6 @@ var ObjectId = schema.Types.ObjectId;
 var userSchema = new schema({
     username: {type: String, required: true, unique: true},
     password: {type: String, required: true},
-    active: {type: Boolean, default: false},
     ip_address: [String],
     nickname: {type: String, default: ''},
     portrait: ObjectId,
@@ -32,33 +31,30 @@ userSchema.path('nickname').validate(function (name) {
 
 //methods
 userSchema.methods = {
-    checkPwd: function (pwd) {
-        return pwd === this.password;
-    },
-    addIP: function (ip, uid) {
+    addIP: function (ip, uid, cb) {
         var ips = this.ip_address;
         if(ips.indexOf(ip)<0){
             ips.push(ip);
             User.update({_id: uid}, {ip_address: ips}, function (err) {
-                return err;
+                cb(err);
             });
         }
     },
-    addPhoto: function (pid, uid) {
+    addPhoto: function (pid, uid, cb) {
         var p = this.photo;
         if(p.indexOf(pid)<0){
             p.push(pid);
             User.update({_id: uid}, {photo: p}, function (err) {
-                return err;
+                cb(err);
             });
         }
     },
-    removePhoto: function (pid, uid) {
+    removePhoto: function (pid, uid, cb) {
         var p = this.photo;
         if(p.indexOf(pid)>-1){
             p.splice(p.indexOf(pid), 1);
             User.update({_id: uid}, {photo: p}, function (err) {
-                return err;
+                cb(err);
             });
         }
     }
