@@ -50,7 +50,7 @@ exports.createUser = function (user, res) {
                     return res.status(400).json({msg: err});
                 }
                 res.status(200).json({
-                    msg: 'A verification email has been sent to you. Please check it.',
+                    msg: 'A verification email has been sent to you. Please confirm it.',
                     res: info
                 });
             });
@@ -61,8 +61,8 @@ exports.createUser = function (user, res) {
     });
 };
 
-exports.resend = function (user, res) {
-    nev.resendVerificationEmail(user.username, function(err, userFound) {
+exports.resend = function (email, res) {
+    nev.resendVerificationEmail(email, function(err, userFound) {
         if (err) {
             return res.status(400).json({msg: err});
         }
