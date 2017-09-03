@@ -14,7 +14,7 @@ router.get('/', function (req, res) {
 
 router.get('/find/:id', function (req, res) {
     var id = req.params.id;
-    var fields = 'username nickname active portrait photo';
+    var fields = 'username nickname portrait photo';
     User.findOne({_id: id}, fields, function (err, user) {
         if(err){
             res.status(400).json({msg: err});
@@ -34,6 +34,11 @@ router.post('/create', function (req, res) {
 router.get('/emailVerification/:URL', function (req, res) {
     var url = req.params.URL;
     nev.confirmUser(url, res);
+});
+
+router.post('/resendEmail', function (req, res) {
+    var email = req.body.username;
+    nev.resend(email, res);
 });
 
 router.post('/login', function (req, res) {
