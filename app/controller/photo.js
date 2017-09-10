@@ -3,6 +3,7 @@ const Photo = require('../model/photo').getPhotoModel();
 const User = require('../model/user').getUserModel();
 const fs = require('fs');
 const multer = require('multer');
+const pyshell = require('python-shell');
 
 router.use(function (req, res, next) {
     next();
@@ -50,38 +51,46 @@ router.post('/upload/:uid', function (req, res) {
                     }
                     cb(null, true);
                 }
-            }).array('photo', 9);
+            }).single('photo');
             upload(req, res, function (err) {
                 if(err){
                     return res.status(400).json({msg: err});
                 }
-                var files = req.files;
-                var storeFiles = function (files, cb) {
-                    for(var i=0; i<files.length; i++)( function (i) {
-                        fs.readFile(files[i].path, function (err, data) {
-                            var photo = new Photo;
-                            photo.userID = user._id;
-                            photo.image = data;
-                            photo.name = files[i].filename;
-                            photo.contentType = files[i].mimetype;
-                            photo.save(function (err, p) {
-                                if(err){
-                                    return cb(err);
-                                } else {
-                                    user.addPhoto(p._id, user._id, function (err) {
-                                        if(err) return cb(err);
-                                        cb(null);
-                                    });
-                                }
+                var storeFiles = function (file, cb) {
+                    var option = {
+                        pythonPath: '/usr/bin/python2',
+                        scriptPath: '/var/www/html/PhantomP/python',
+                        args: [file.path, file.path+'_p']
+                    };
+                    pyshell.run('PhantomP.py', option, function (err) {
+                        if(err){
+                            cb(err);
+                        } else {
+                            fs.readFile(file.path+'_p', function (err, data) {
+                                var photo = new Photo;
+                                photo.userID = user._id;
+                                photo.image = data;
+                                photo.name = file.filename;
+                                photo.contentType = file.mimetype;
+                                photo.save(function (err, p) {
+                                    if(err){
+                                        cb(err);
+                                    } else {
+                                        user.addPhoto(p._id, user._id, function (err) {
+                                            if(err) cb(err);
+                                            else cb(null, p._id);
+                                        });
+                                    }
+                                });
                             });
-                        });
-                    })(i);
+                        }
+                    });
                 };
-                storeFiles(files, function (err) {
+                storeFiles(req.file, function (err, pid) {
                     if(err){
                         res.status(400).json({msg: err});
                     } else {
-                        res.status(200).json({msg: 'SUCCESS'});
+                        res.status(200).json({msg: 'SUCCESS', res: pid});
                     }
                 });
             });
