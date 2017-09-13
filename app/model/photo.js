@@ -4,7 +4,7 @@ var ObjectId = schema.Types.ObjectId;
 
 var photoSchema = new schema({
     userID: {type: ObjectId, required: true},
-    image: Buffer,
+    image: {type: String, required: true},
     name: {type: String, required: true},
     time: {type: Date, default: Date.now},
     contentType: {type: String, required: true}
