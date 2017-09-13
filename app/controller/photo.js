@@ -66,7 +66,7 @@ router.post('/upload/:uid', function (req, res) {
                         if(err){
                             cb(err);
                         } else {
-                            fs.readFile(file.path+'_p', function (err, data) {
+                            fs.readFile(file.path+'_p', 'base64', function (err, data) {
                                 var photo = new Photo;
                                 photo.userID = user._id;
                                 photo.image = data;
