@@ -57,6 +57,7 @@ router.post('/upload/:uid', function (req, res) {
                     return res.status(400).json({msg: err});
                 }
                 var storeFiles = function (file, cb) {
+                    if(file===undefined) return cb('Empty File');
                     var option = {
                         pythonPath: '/usr/bin/python2',
                         scriptPath: '/var/www/html/PhantomP/python',
