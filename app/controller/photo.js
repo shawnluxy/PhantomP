@@ -43,7 +43,7 @@ router.post('/upload/:uid', function (req, res) {
             });
             var upload = multer({
                 storage: storage,
-                limits: { fileSize: 1000000 },
+                limits: { fileSize: 2000000 },
                 fileFilter: function (req, file, cb) {
                     var ext = file.mimetype.split('/')[0];
                     if(ext!=='image'){
