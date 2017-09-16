@@ -13,7 +13,7 @@ var Hasher = function(pwd, tempUserData, insertTempUser, callback) {
 };
 
 nev.configure({
-    verificationURL: 'http://shawnluxy.ddns.net:2333/user/emailVerification/${URL}',
+    verificationURL: 'https://shawnluxy.ddns.net:8080/user/emailVerification/${URL}',
     persistentUserModel: UserModel,
     emailFieldName: 'username',
     expirationTime: 3600,    // 60min
